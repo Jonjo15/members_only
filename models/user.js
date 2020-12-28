@@ -5,7 +5,7 @@ var Schema = mongoose.Schema;
 var UserSchema = new Schema(
   {
     first_name: {type: String, required: true, maxlength: 100},
-    family_name: {type: String, required: true, maxlength: 100},
+    second_name: {type: String, required: true, maxlength: 100},
     email: {type: String, required: true, maxlength:50},
     password: {type: String, required: true},
     isMember: {type: Boolean, required: true},
@@ -21,7 +21,7 @@ UserSchema
 });
 
 // Virtual for author's URL
-AuthorSchema
+UserSchema
 .virtual('url')
 .get(function () {
   return '/users/' + this._id;

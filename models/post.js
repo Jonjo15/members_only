@@ -16,7 +16,7 @@ var PostSchema = new Schema(
 // Virtual for author's lifespan
 
 // Virtual for author's URL
-AuthorSchema
+PostSchema
 .virtual('url')
 .get(function () {
   return '/posts/' + this._id;
