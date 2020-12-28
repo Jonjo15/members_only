@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 const bcrypt = require("bcryptjs")
+const passport = require("passport");
 const post = require('../models/post');
 const User = require("../models/user")
 /* GET home page. */
@@ -17,8 +18,8 @@ router.get("/register", function(req,res,next) {
 router.post("/register", [
   body('first_name', 'First Name required').trim().isLength({ min: 1 }).escape(),
   body('second_name', 'Second Name required').trim().isLength({ min: 1 }).escape(),
-  body('email', 'Email required').trim().isLength({ min: 1 }).escape(),
-  body("email","Email Addres must be valid").normalizeEmail().isEmail(),
+  body('username', 'Username required').trim().isLength({ min: 1 }).escape(),
+  // body("email","Email Addres must be valid").normalizeEmail().isEmail(),
   body('password', 'Password required').trim().isLength({ min: 4 }).escape(),
   body('confirm_password', "Passwords must match").exists().custom((value, { req }) => value === req.body.password),
 
@@ -36,7 +37,7 @@ router.post("/register", [
     // if err, do something
     // otherwise, store hashedPassword in DB
     const user = new User({
-      email: req.body.email,
+      username: req.body.username,
       first_name: req.body.first_name,
       second_name: req.body.second_name,
       password: hashedPassword,
@@ -54,7 +55,14 @@ router.post("/register", [
 router.get("/login", function(req, res, next) {
   res.render("login_form")
 })
-
+router.get("/success", (req, res, next) => res.send("Success"))
+router.get("/failure", (req, res, next) => res.send("Failure"))
+router.post("/login",
+  passport.authenticate("local", {
+    successRedirect: "/success",
+    failureRedirect: "/failure"
+  })
+);
 router.get("/posts", function(req,res,next) {
   res.send("Posts not set up yet")
 })
