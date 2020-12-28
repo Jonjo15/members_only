@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Posts</title>
+</head>
+<body>
+    <ul>
+        <% for (var i = 0; i < list_posts.length ; i++) { %>
+            <li> <%= list_posts[i].title %> : <%= list_posts[i].body%> --- <%= list_posts[i].user.username %> </li>
+        <% } %>
+    </ul>
+</body>
+</html>

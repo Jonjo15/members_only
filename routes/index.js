@@ -106,6 +106,12 @@ router.post("/create_post", [
 ])
 
 router.get("/posts", function(req,res,next) {
-  res.send("Posts not set up yet")
+  Post.find({}, 'title body')
+      .populate('user')
+      .exec(function (err, list_posts) {
+        if (err) { return next(err); }
+        //Successful, so render
+        res.render('posts', { list_posts: list_posts });
+      });
 })
 module.exports = router;
