@@ -72,6 +72,10 @@ router.post("/login",
   })
 );
 
+router.get("/join", (req, res, next) => {
+  res.render("member_form")
+})
+
 router.get("/create_post", (req,res,next) => {
   res.render("post_form", {user: req.user})
 })

@@ -3,12 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel='stylesheet' href='/stylesheets/style.css' />
     <title>Posts</title>
+    
 </head>
 <body>
     <ul>
         <% for (var i = 0; i < list_posts.length ; i++) { %>
-            <li> <%= list_posts[i].title %> : <%= list_posts[i].body%> --- <%= list_posts[i].user.username %> </li>
+            <li>
+                <div class="post">
+                    <h2><%= list_posts[i].title %> by <%= list_posts[i].user.username %></h2>
+                    <p><%= list_posts[i].body%></p> 
+                </div>
+                 
+            </li>
         <% } %>
     </ul>
 </body>

@@ -10,3 +10,13 @@ input {
   display: block;
   width: 100%;
 }
+.post {
+  background-color: aquamarine;
+  color: black;
+  margin: 0 auto;
+  border: 1px solid grey;
+  padding: 20px;
+}
+li {
+  list-style: none;
+}
