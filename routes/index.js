@@ -2,7 +2,7 @@ var express = require('express');
 var router = express.Router();
 const bcrypt = require("bcryptjs")
 const passport = require("passport");
-const post = require('../models/post');
+const Post = require('../models/post');
 const User = require("../models/user")
 /* GET home page. */
 const { body,validationResult } = require("express-validator");
@@ -10,12 +10,18 @@ const { body,validationResult } = require("express-validator");
 router.get('/', function(req, res, next) {
   res.redirect("/register")
 });
+
 router.get("/log-out", (req, res) => {
   req.logout();
   res.redirect("/register");
 });
+
 router.get("/register", function(req,res,next) {
   res.render("register_form", {title: "Members Only", user: req.user})
+})
+
+router.get("/profile", (req,res,next) => {
+  res.render("profile", {user: req.user})
 })
 
 router.post("/register", [
@@ -58,14 +64,47 @@ router.post("/register", [
 router.get("/login", function(req, res, next) {
   res.render("login_form")
 })
-router.get("/success", (req, res, next) => res.send("Success"))
-router.get("/failure", (req, res, next) => res.send("Failure"))
+
 router.post("/login",
   passport.authenticate("local", {
-    successRedirect: "/success",
-    failureRedirect: "/failure"
+    successRedirect: "/profile",
+    failureRedirect: "/login"
   })
 );
+
+router.get("/create_post", (req,res,next) => {
+  res.render("post_form", {user: req.user})
+})
+
+router.post("/create_post", [
+  body('title', 'Title is required').trim().isLength({ min: 1 }).escape(),
+  body('body', 'Content must not be empty').trim().isLength({ min: 1 }).escape(),
+
+  (req, res, next) => {
+
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+      // There are errors. Render the form again with sanitized values/error messages.
+      res.render('post_form', { errors: errors.array()});
+      return;
+    }
+
+    const post = new Post({
+      title: req.body.title,
+      body: req.body.body,
+      user: req.user._id,
+      created_at: new Date().toISOString(),
+  }).save(err => {
+    if (err) { 
+      return next(err);
+    };
+    res.redirect("/posts");
+  });
+
+    }
+])
+
 router.get("/posts", function(req,res,next) {
   res.send("Posts not set up yet")
 })

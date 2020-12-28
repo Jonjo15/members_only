@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Profile</title>
+</head>
+<body>
+    <% if (user) {%>
+        <h1>WELCOME BACK <%= user.username %></h1>
+        <p><%= user._id %></p>
+        <p><%= user.name%></p>
+        <p>Admin: <%= user.isAdmin %></p>
+        <p>Member: <%= user.isMember %></p>
+        <ul>
+            <li><a href="/join">Join The Club</a></li>
+            <li><a href="/admin-application">Become An Admin</a></li>
+            <li><a href="/posts">View Posts</a></li>
+            <li><a href="/create_post">Create a Post</a></li>
+            <li><a href="/log-out">LOG OUT</a></li>
+        </ul>
+    <% } else { %>
+        <a href="/register">Register here</a>
+    <%}%>
+</body>
+</html>

@@ -7,7 +7,7 @@ var PostSchema = new Schema(
     body: {type: String, required: true, maxlength: 300},
     title: {type: String, required: true, maxlength: 100},
     created_at: {type: Date},
-    creator: {type: Schema.Types.ObjectId, ref: 'User', required: true},
+    user: {type: Schema.Types.ObjectId, ref: 'User', required: true},
   }
 );
 
