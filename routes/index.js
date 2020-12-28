@@ -76,6 +76,58 @@ router.get("/join", (req, res, next) => {
   res.render("member_form")
 })
 
+router.post("/join", [
+  body('code', 'Code is required').trim().isLength({ min: 1 }).escape(),
+
+  (req, res, next) => {
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+      // There are errors. Render the form again with sanitized values/error messages.
+      res.render('member_form', { errors: errors.array()});
+      return;
+    }
+
+    if (req.body.code === process.env.MEMBER_PASS) {
+      User.findByIdAndUpdate(req.user._id, { isMember: true}, function updateUser(err) {
+        if (err) {return next(err)}
+        res.redirect("/profile")
+    })
+    }
+    else {
+      res.render("member_form")
+    }
+  }
+])
+
+router.get("/become-admin", (req, res, next) => {
+  res.render("admin_form")
+})
+
+router.post("/become-admin", [
+  body('code', 'Code is required').trim().isLength({ min: 1 }).escape(),
+
+  (req, res, next) => {
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+      // There are errors. Render the form again with sanitized values/error messages.
+      res.render('admin_form', { errors: errors.array()});
+      return;
+    }
+
+    if (req.body.code === process.env.ADMIN_PASS) {
+      User.findByIdAndUpdate(req.user._id, { isAdmin: true}, function updateUser(err) {
+        if (err) {return next(err)}
+        res.redirect("/profile")
+    })
+    }
+    else {
+      res.render("admin_form")
+    }
+  }
+])
+
 router.get("/create_post", (req,res,next) => {
   res.render("post_form", {user: req.user})
 })
