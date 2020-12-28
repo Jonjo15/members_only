@@ -5,8 +5,11 @@
   <title></title>
 </head>
 <body>
-  <h1>Register</h1>
-  <form action="" method="POST">
+  <% if (user) {%>
+    <h1>WELCOME BACK <%= user.username %></h1>
+    <a href="/log-out">LOG OUT</a>
+  <% } else { %>
+    <form action="" method="POST">
     <label for="first_name">First Name</label>
     <input name="first_name" placeholder="John" type="text" />
     <label for="second_name">Second Name</label>
@@ -18,7 +21,8 @@
     <label for="confirm_password">Confirm Password</label>
     <input name="confirm_password" type="password" />
     <button>Register</button>
-  </form>
+    </form>
+    <small>Already have an account? <a href="/login">Log In</a></small>
+  <%}%>
 </body>
-<small>Already have an account? <a href="/login">Log In</a></small>
 </html>

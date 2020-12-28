@@ -10,9 +10,12 @@ const { body,validationResult } = require("express-validator");
 router.get('/', function(req, res, next) {
   res.redirect("/register")
 });
-
+router.get("/log-out", (req, res) => {
+  req.logout();
+  res.redirect("/register");
+});
 router.get("/register", function(req,res,next) {
-  res.render("register_form", {title: "Members Only"})
+  res.render("register_form", {title: "Members Only", user: req.user})
 })
 
 router.post("/register", [
