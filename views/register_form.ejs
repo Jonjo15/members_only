@@ -7,7 +7,12 @@
 <body>
   <% if (user) {%>
     <h1>WELCOME BACK <%= user.username %></h1>
-    <a href="/log-out">LOG OUT</a>
+    <ul>
+        <li><a href="/join">Join The Club</a></li>
+        <li><a href="/admin-application">Become An Admin</a></li>
+        <li><a href="/posts">View Posts</a></li>
+        <li><a href="/log-out">LOG OUT</a></li>
+    </ul>
   <% } else { %>
     <form action="" method="POST">
     <label for="first_name">First Name</label>
