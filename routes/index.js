@@ -4,27 +4,28 @@ const bcrypt = require("bcryptjs")
 const passport = require("passport");
 const Post = require('../models/post');
 const User = require("../models/user")
+const authMiddleware = require("./authmiddleware")
 /* GET home page. */
 const { body,validationResult } = require("express-validator");
 
-router.get('/', function(req, res, next) {
+router.get('/', authMiddleware.alreadyLoggedIn, function(req, res, next) {
   res.redirect("/register")
 });
 
-router.get("/log-out", (req, res) => {
+router.get("/log-out", authMiddleware.isAuth, (req, res) => {
   req.logout();
   res.redirect("/register");
 });
 
-router.get("/register", function(req,res,next) {
+router.get("/register", authMiddleware.alreadyLoggedIn, function(req,res,next) {
   res.render("register_form", {title: "Members Only", user: req.user})
 })
 
-router.get("/profile", (req,res,next) => {
+router.get("/profile", authMiddleware.isAuth, (req,res,next) => {
   res.render("profile", {user: req.user})
 })
 
-router.post("/register", [
+router.post("/register", authMiddleware.alreadyLoggedIn, [
   body('first_name', 'First Name required').trim().isLength({ min: 1 }).escape(),
   body('second_name', 'Second Name required').trim().isLength({ min: 1 }).escape(),
   body('username', 'Username required').trim().isLength({ min: 1 }).escape(),
@@ -61,22 +62,22 @@ router.post("/register", [
   });
 }]);
 
-router.get("/login", function(req, res, next) {
+router.get("/login", authMiddleware.alreadyLoggedIn, function(req, res, next) {
   res.render("login_form")
 })
 
-router.post("/login",
+router.post("/login", authMiddleware.alreadyLoggedIn,
   passport.authenticate("local", {
     successRedirect: "/profile",
     failureRedirect: "/login"
   })
 );
 
-router.get("/join", (req, res, next) => {
+router.get("/join", authMiddleware.isAuth, (req, res, next) => {
   res.render("member_form")
 })
 
-router.post("/join", [
+router.post("/join", authMiddleware.isAuth, [
   body('code', 'Code is required').trim().isLength({ min: 1 }).escape(),
 
   (req, res, next) => {
@@ -100,11 +101,11 @@ router.post("/join", [
   }
 ])
 
-router.get("/become-admin", (req, res, next) => {
+router.get("/become-admin", authMiddleware.isAuth, (req, res, next) => {
   res.render("admin_form")
 })
 
-router.post("/become-admin", [
+router.post("/become-admin", authMiddleware.isAuth, [
   body('code', 'Code is required').trim().isLength({ min: 1 }).escape(),
 
   (req, res, next) => {
@@ -128,11 +129,11 @@ router.post("/become-admin", [
   }
 ])
 
-router.get("/create_post", (req,res,next) => {
+router.get("/create_post", authMiddleware.isAuth, (req,res,next) => {
   res.render("post_form", {user: req.user})
 })
 
-router.post("/create_post", [
+router.post("/create_post", authMiddleware.isAuth, [
   body('title', 'Title is required').trim().isLength({ min: 1 }).escape(),
   body('body', 'Content must not be empty').trim().isLength({ min: 1 }).escape(),
 
@@ -161,7 +162,7 @@ router.post("/create_post", [
     }
 ])
 
-router.get("/delete/:id", (req, res, next) => {
+router.get("/delete/:id", authMiddleware.isAdmin, (req, res, next) => {
   Post.findById(req.params.id).exec(function (err, post) {
     if (err) { return next(err)}
 
@@ -169,14 +170,14 @@ router.get("/delete/:id", (req, res, next) => {
 })
 })
 
-router.post("/delete/:id", (req, res, next) => {
+router.post("/delete/:id", authMiddleware.isAdmin, (req, res, next) => {
   Post.findByIdAndRemove(req.params.id, function deleteInstance(err) {
     if (err) {return next(err)}
     res.redirect("/posts")
 })
 })
 
-router.get("/posts", function(req,res,next) {
+router.get("/posts", authMiddleware.isAuth, function(req,res,next) {
   Post.find({}, 'title body')
       .populate('user')
       .exec(function (err, list_posts) {
