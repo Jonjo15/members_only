@@ -19,7 +19,7 @@ var PostSchema = new Schema(
 PostSchema
 .virtual('url')
 .get(function () {
-  return '/posts/' + this._id;
+  return '/delete/' + this._id;
 });
 
 //Export model

@@ -12,10 +12,15 @@
         <% for (var i = 0; i < list_posts.length ; i++) { %>
             <li>
                 <div class="post">
-                    <% if (currentUser) {%>
+                    <% if (currentUser.isMember) {%>
                     <h2><%= list_posts[i].title %> by <%= list_posts[i].user.username %></h2>
                     <%} %>
                     <p><%= list_posts[i].body%></p> 
+                    <% if (currentUser.isAdmin) {%>
+                        <a href=<%=list_posts[i].url %>>Delete Post</a>
+                    <%} %>
+                        
+                    
                 </div>
                  
             </li>
