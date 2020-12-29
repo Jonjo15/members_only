@@ -169,6 +169,13 @@ router.get("/delete/:id", (req, res, next) => {
 })
 })
 
+router.post("/delete/:id", (req, res, next) => {
+  Post.findByIdAndRemove(req.params.id, function deleteInstance(err) {
+    if (err) {return next(err)}
+    res.redirect("/posts")
+})
+})
+
 router.get("/posts", function(req,res,next) {
   Post.find({}, 'title body')
       .populate('user')
