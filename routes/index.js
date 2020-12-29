@@ -161,6 +161,14 @@ router.post("/create_post", [
     }
 ])
 
+router.get("/delete/:id", (req, res, next) => {
+  Post.findById(req.params.id).exec(function (err, post) {
+    if (err) { return next(err)}
+
+    res.render("post_delete", {title: "Delete Item", post: post})
+})
+})
+
 router.get("/posts", function(req,res,next) {
   Post.find({}, 'title body')
       .populate('user')
